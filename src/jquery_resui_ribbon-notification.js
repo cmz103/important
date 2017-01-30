@@ -1,5 +1,5 @@
 /*!
-* RESUI jQuery Ribbon Notification
+* jQuery UI Ribbon Notification
 * Author: Cedric Maniquiz
 * version: 0.0.1 (11-MAR-2015)
 * @requires jQuery/jQuery UI
