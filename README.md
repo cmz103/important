@@ -22,7 +22,7 @@ Simple notification ribbon. Suited more for important messages rather than syste
 3. Call the plugin:
 
 	```javascript
-	$("#element").defaultPluginName({
+	$("#element").resui.ribbonNotification({
 		propertyName: "a custom value"
 	});
 	```
