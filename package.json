@@ -1,54 +1,22 @@
 {
-  "name": "jquery-boilerplate",
-  "version": "3.5.0",
-  "description": "A jump-start for jQuery plugins development.",
-  "keywords": [
-    "jquery-plugin",
-    "jquery",
-    "boilerplate",
-    "plugins"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jquery-boilerplate/jquery-boilerplate.git"
-  },
-  "bugs": {
-    "url": "https://github.com/jquery-boilerplate/jquery-boilerplate/issues"
-  },
-  "author": {
-    "name": "Zeno Rocha",
-    "email": "zno.rocha@gmail.com",
-    "url": "https://github.com/zenorocha"
-  },
-  "homepage": "http://jqueryboilerplate.com",
-  "contributors": [
-    {
-      "name": "Zeno Rocha",
-      "email": "zno.rocha@gmail.com",
-      "url": "https://github.com/zenorocha"
-    },
-    {
-      "name": "Addy Osmani",
-      "email": "addyosmani@gmail.com",
-      "url": "https://github.com/addyosmani"
-    },
-    {
-      "name": "Helder Santana",
-      "email": "heldr@me.com",
-      "url": "https://github.com/heldr"
-    }
-  ],
-  "license": "MIT",
-  "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-cli": "~0.1.13",
-    "grunt-contrib-coffee": "^0.12.0",
-    "grunt-contrib-concat": "^0.5.1",
-    "grunt-contrib-jshint": "^0.11.0",
-    "grunt-contrib-uglify": "^0.8.0",
-    "grunt-contrib-watch": "^0.6.1"
-  },
+  "name": "formularize",
+  "version": "1.0.0",
+  "description": "Typescript class to handle common web form functions",
+  "main": "index.js",
   "scripts": {
-    "test": "grunt travis --verbose"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cedric Maniquiz",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bootstrap-select": "^1.11.1",
+    "@types/jquery": "^3.2.12",
+    "@types/jqueryui": "^1.11.36",
+    "@types/lodash": "^4.14.74",
+    "browser-sync": "^2.18.13",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-typescript": "^3.2.2",
+    "typescript": "^2.5.2"
   }
 }
