@@ -1,0 +1,1 @@
+let imp = new Important(<HTMLElement>document.getElementById("impWrapper"));

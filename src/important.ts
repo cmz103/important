@@ -1,106 +1,78 @@
-// the semi-colon before function invocation is a safety net against concatenated
-// scripts and/or other plugins which may not be closed properly.
-; (function ($, window, document, undefined) {
+class Important {
 
-    "use strict";
+    public element: HTMLElement;
+    public bgColor: string;
+    public showCloseBtn: boolean;
+    public value: string;
+    public textIndent: string;
+    public init: void;
 
-    // undefined is used here as the undefined global variable in ECMAScript 3 is
-    // mutable (ie. it can be changed by someone else). undefined isn't really being
-    // passed in so we can ensure the value of it is truly undefined. In ES5, undefined
-    // can no longer be modified.
+    constructor(element: HTMLElement, value = "Hello World", bgColor = "#FEFB64", showCloseBtn = true, textIndent = "0") {
 
-    // window and document are passed through as local variable rather than global
-    // as this (slightly) quickens the resolution process and can be more efficiently
-    // minified (especially when both are regularly referenced in your plugin).
-
-    // Create the defaults once
-    var pluginName = "important",
-        defaults = {
-            backgroundColor: "#FEFB64",
-            showCloseButton: true,
-            value: "Sausage venison ground round ham hock",
-            textIndent: '0'
-        };
-
-    // The actual plugin constructor
-    function Plugin(element, options) {
         this.element = element;
-        // jQuery has an extend method which merges the contents of two or
-        // more objects, storing the result in the first object. The first object
-        // is generally empty as we don't want to alter the default options for
-        // future instances of the plugin
-        this.settings = $.extend({}, defaults, options);
-        this._defaults = defaults;
-        this._name = pluginName;
-        this.init();
+        this.value = value;
+        this.bgColor = bgColor;
+        this.showCloseBtn = showCloseBtn;
+        this.textIndent = textIndent;
+        this.init = this.initialize();
     }
 
-    // Avoid Plugin.prototype conflicts
-    $.extend(Plugin.prototype, {
-        init: function () {
-            // Place initialization logic here
-            // You already have access to the DOM element and
-            // the options via the instance, e.g. this.element
-            // and this.settings
-            // you can add more functions like the one below and
-            // call them like so: this.yourOtherFunction(this.element, this.settings).
-            var that = this;
-            var backgroundImageExists = ($("body").css("background-image") != "none");
-            var currentBackgorundImagePosition = $("body").css("background-position");
+    public initialize = (): void => {
 
-            this.element
-				.addClass("resui-widget-ribbon-notification")
-				.html(this.options.value)
-				.css({
-				    'background-color': this.options.backgroundColor,
-				    'text-indent': this.options.textIndent,
-				    'min-height': '40px',
-				    'max-height': '40px'
-				})
-				.prependTo("body");
+        //prep work
+        let elClasslist: CSSStyleDeclaration = window.getComputedStyle(this.element);
+        let bodyClasslist: CSSStyleDeclaration = window.getComputedStyle(document.body);
+        let doesBgImgExist: boolean = elClasslist.backgroundImage === "none";
+        let currentBgImgPos: string | null = bodyClasslist.backgroundPosition;
+        let height: number = this.element.offsetHeight;
 
-            if (this.options.showCloseButton) {
-                this.element
-					.append('<span class="resui-widget-ribbon-notification-close">✖</span>');
-            }
+        //create close btn
+        let closeBtn: HTMLElement = document.createElement("span");
+        let closeBtnText: Text = document.createTextNode("<span class='imp-close'>✖</span>");
+        closeBtn.appendChild(closeBtnText);
+        closeBtn.id = "impCloseBtn";
 
-            var outerHeight = this.element.outerHeight();
+        //build/append wrapper
+        this.element.classList.add("imp");
+        this.element.innerHTML = this.value;
+        this.element.style.cssText = "background-color: " + this.bgColor + "; text-indent: " + this.textIndent + "; min-height: 40px; max-height: 40px;";
+        document.body.appendChild(this.element);
+        document.body.insertBefore(this.element, document.body.firstChild);
 
-            if (backgroundImageExists) {
-                $('body').addClass('resui-ribbon-background-adjustment');
-            }
+        if (this.showCloseBtn) {
+            this.element.insertAdjacentHTML('beforeend', closeBtn.outerHTML);
+        }
 
-            this.element.find(".resui-widget-ribbon-notification-close").on("click", function () {
-                that.destroy();
-            });
+        if (doesBgImgExist) {
+            document.body.classList.add("imp-adjust");
+        }
 
-            //dynamically create css and append to head
-            var style = '.resui-widget-ribbon-notification { padding: 8px 30px; font: 14px Arial; position: relative; ' +
-                        '-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }' +
-						'.resui-widget-ribbon-notification a { color: #6A9BC1; text-decoration: underline; }' +
-						'.resui-widget-ribbon-notification a:hover { text-decoration: none; }' +
-						'.resui-widget-ribbon-notification-close { position: absolute; right: 20px; top: 5px; cursor: pointer; }' +
-                        '.resui-ribbon-background-adjustment { background-position: center ' + outerHeight + 'px !important; }';
+        //attach destroy
+        closeBtn.addEventListener("click", this.destroy);
 
-            if (!$('#jqResuiRibbonNotificationStyles').length) {
-                $('head').append('<style id="jqResuiRibbonNotificationStyles">' + style + '</style>');
-            }
-        },
-        destroy: function () {
-            this.element.hide();
-            $('body').removeClass('resui-ribbon-background-adjustment');
-            this._trigger("onDestroy", null, null);
-        },
-    });
+        //dynamically create css and append to head
+        let styles: string = '.imp { padding: 8px 30px; font: 14px Arial; position: relative; ' +
+            '-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }' +
+            '.imp a { color: #6A9BC1; text-decoration: underline; }' +
+            '.imp a:hover { text-decoration: none; }' +
+            '.imp-close { position: absolute; right: 20px; top: 5px; cursor: pointer; }' +
+            '.imp-adjust { background-position: center ' + height + 'px !important; }';
 
-    // A really lightweight plugin wrapper around the constructor,
-    // preventing against multiple instantiations
-    $.fn[pluginName] = function (options) {
-        return this.each(function () {
-            if (!$.data(this, "plugin_" + pluginName)) {
-                $.data(this, "plugin_" + pluginName, new Plugin(this, options));
-            }
-        });
-    };
+        //check if styles exist
+        //if not, append styles
+        if (!document.getElementById("imp-styles")) {
 
-})(jQuery, window, document);
+            let styleTag: HTMLStyleElement = document.createElement("style");
+            styleTag.id = "imp-styles";
+            styleTag.innerHTML = styles;
+
+            document.head.appendChild(styleTag);
+        }
+    }
+
+    public destroy = (): void => {
+        document.body.removeChild(this.element);
+        document.body.classList.remove("imp-adjust");
+    }
+
+}
