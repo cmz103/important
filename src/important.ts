@@ -7,8 +7,12 @@ class Important {
     public textIndent: string;
     public init: void;
 
-    constructor(element: HTMLElement, value = "Hello World", bgColor = "#FEFB64", showCloseBtn = true, textIndent = "0") {
-
+    constructor(
+        element: HTMLElement,
+        value = "Hello World",
+        bgColor = "#FEFB64",
+        showCloseBtn = true,
+        textIndent = "0") {
         this.element = element;
         this.value = value;
         this.bgColor = bgColor;
@@ -19,50 +23,57 @@ class Important {
 
     public initialize = (): void => {
 
-        //prep work
-        let elClasslist: CSSStyleDeclaration = window.getComputedStyle(this.element);
-        let bodyClasslist: CSSStyleDeclaration = window.getComputedStyle(document.body);
-        let doesBgImgExist: boolean = elClasslist.backgroundImage === "none";
-        let currentBgImgPos: string | null = bodyClasslist.backgroundPosition;
-        let height: number = this.element.offsetHeight;
+        // prep work
+        const elClasslist: CSSStyleDeclaration = window.getComputedStyle(this.element);
+        const bodyClasslist: CSSStyleDeclaration = window.getComputedStyle(document.body);
+        const doesBgImgExist: boolean = elClasslist.backgroundImage === "none";
+        const currentBgImgPos: string | null = bodyClasslist.backgroundPosition;
+        const height: number = this.element.offsetHeight;
 
-        //create close btn
-        let closeBtn: HTMLElement = document.createElement("span");
-        let closeBtnText: Text = document.createTextNode("<span class='imp-close'>✖</span>");
+        // create close btn
+        const closeBtn: HTMLElement = document.createElement("span");
+        const closeBtnText: Text = document.createTextNode("✖");
         closeBtn.appendChild(closeBtnText);
+        closeBtn.classList.add("imp-close");
         closeBtn.id = "impCloseBtn";
 
-        //build/append wrapper
+        // build/append wrapper
+        this.element.id = "impWrapper";
         this.element.classList.add("imp");
         this.element.innerHTML = this.value;
-        this.element.style.cssText = "background-color: " + this.bgColor + "; text-indent: " + this.textIndent + "; min-height: 40px; max-height: 40px;";
+        this.element.style.cssText = "background-color: " + this.bgColor;
+        this.element.style.cssText += "text-indent: " + this.textIndent;
+        this.element.style.cssText += "min-height: 40px; max-height: 200px; overflow: auto;";
+
         document.body.appendChild(this.element);
         document.body.insertBefore(this.element, document.body.firstChild);
 
+        // insert close button
         if (this.showCloseBtn) {
-            this.element.insertAdjacentHTML('beforeend', closeBtn.outerHTML);
+            this.element.appendChild(closeBtn);
         }
 
+        // check for background images/apply adjust class
         if (doesBgImgExist) {
             document.body.classList.add("imp-adjust");
         }
 
-        //attach destroy
+        // attach destroy
         closeBtn.addEventListener("click", this.destroy);
 
-        //dynamically create css and append to head
-        let styles: string = '.imp { padding: 8px 30px; font: 14px Arial; position: relative; ' +
-            '-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }' +
-            '.imp a { color: #6A9BC1; text-decoration: underline; }' +
-            '.imp a:hover { text-decoration: none; }' +
-            '.imp-close { position: absolute; right: 20px; top: 5px; cursor: pointer; }' +
-            '.imp-adjust { background-position: center ' + height + 'px !important; }';
+        // dynamically create css and append to head
+        const styles: string = ".imp { padding: 8px 35px; font: 14px Arial; position: relative; " +
+            "-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }" +
+            ".imp a { color: #6A9BC1; text-decoration: underline; }" +
+            ".imp a:hover { text-decoration: none; }" +
+            ".imp-close { position: absolute; right: 20px; top: 5px; cursor: pointer; }" +
+            ".imp-adjust { background-position: center ' + height + 'px !important; }";
 
-        //check if styles exist
-        //if not, append styles
+        // check if styles exist
+        // if not, append styles
         if (!document.getElementById("imp-styles")) {
 
-            let styleTag: HTMLStyleElement = document.createElement("style");
+            const styleTag: HTMLStyleElement = document.createElement("style");
             styleTag.id = "imp-styles";
             styleTag.innerHTML = styles;
 
@@ -70,6 +81,7 @@ class Important {
         }
     }
 
+    // remove notification from DOM
     public destroy = (): void => {
         document.body.removeChild(this.element);
         document.body.classList.remove("imp-adjust");
