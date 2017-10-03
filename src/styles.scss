@@ -1,3 +1,19 @@
 body {
-    
+    padding: 0;
+    margin: 0;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+h3 {
+    margin: 25px 0 0 0;
+    color: grey;
+}
+
+.wrapper {
+    padding: 10px;
+}
+
+pre {
+    border: 1px dashed lightgray;
+    background-color: whitesmoke;
 }
